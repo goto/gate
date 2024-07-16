@@ -40,6 +40,33 @@ class ::Api::V1::GroupsController < ::Api::V1::BaseController
     head :no_content
   end
 
+  def remove_user
+    @group = Group.find_by(id: params[:id])
+    return head :not_found unless @group.present?
+    
+    return raise_unauthorized unless current_user.admin? || @group.admin?(current_user)
+    
+    user = User.find_by(id: params[:user_id])
+    return head :unprocessable_entity unless user.present?
+    
+    @group.remove_user(params[:user_id])
+    head :no_content
+  end
+
+  def user_in_group
+    @group = Group.find_by(id: params[:id])
+    return head :not_found unless @group.present?
+
+    user = User.find_by(id: params[:user_id])
+    if user.nil?
+      render json: { error: "user not found" }, status: :not_found
+      return
+    end
+
+    is_member = @group.users.exists?(user.id)
+    render json: { is_member: is_member }
+  end
+
   private
 
   def group_params
