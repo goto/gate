@@ -53,18 +53,22 @@ class ::Api::V1::GroupsController < ::Api::V1::BaseController
     head :no_content
   end
 
-  def user_in_group
+  def get_group_member
     @group = Group.find_by(id: params[:id])
     return head :not_found unless @group.present?
-
+  
     user = User.find_by(id: params[:user_id])
     if user.nil?
-      render json: { error: "user not found" }, status: :not_found
+      render json: { error: "User not found" }, status: :not_found
       return
     end
-
+  
     is_member = @group.users.exists?(user.id)
-    render json: { is_member: is_member }
+    if is_member
+      render json: user.as_json(only: [:id, :email, :created_at, :updated_at, :uid, :name, :active]), status: :ok
+    else
+      render json: { error: "User not a member of the group" }, status: :not_found
+    end
   end
 
   private
