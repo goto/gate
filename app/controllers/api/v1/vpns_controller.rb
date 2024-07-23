@@ -3,6 +3,7 @@ class ::Api::V1::VpnsController < ::Api::V1::BaseController
 
   def index
     vpns = Vpn.order(:id).page(params[:page]).per(params[:per_page])
+    vpns = vpns.where("name LIKE ?", "%#{params[:q]}%") if params[:q].present?
     render json: vpns, status: :ok
   end
 
