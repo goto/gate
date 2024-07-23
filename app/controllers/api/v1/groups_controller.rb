@@ -60,6 +60,8 @@ class ::Api::V1::GroupsController < ::Api::V1::BaseController
 
   def list_admins
     group = Group.find(params[:id])
+    return head :not_found unless group.present?
+
     users = group.group_admins.joins(:user).
       select('users.id, users.email, users.name, users.active, group_admins.created_at as join_date').
       where('users.active = ?', true)
