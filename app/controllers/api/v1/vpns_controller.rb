@@ -8,7 +8,9 @@ class ::Api::V1::VpnsController < ::Api::V1::BaseController
   end
 
   def associated_groups
-    vpn = Vpn.find(params[:id])
+    vpn = Vpn.find_by_id(params[:id])
+    return head :not_found unless vpn.present?
+
     groups = vpn.groups
     render json: groups, status: :ok
   end
