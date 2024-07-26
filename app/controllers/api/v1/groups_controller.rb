@@ -59,7 +59,7 @@ class ::Api::V1::GroupsController < ::Api::V1::BaseController
   end
 
   def list_admins
-    group = Group.find(params[:id])
+    group = Group.find_by_id(params[:id])
     return head :not_found unless group.present?
 
     users = group.group_admins.joins(:user).
