@@ -1,6 +1,17 @@
 class ::Api::V1::VpnsController < ::Api::V1::BaseController
   before_action :set_vpn, only: [:assign_group]
 
+  def index
+    vpns = Vpn.order(:id).page(params[:page]).per(params[:per_page])
+    render json: vpns, status: :ok
+  end
+
+  def associated_groups
+    vpn = Vpn.find(params[:id])
+    groups = vpn.groups
+    render json: groups, status: :ok
+  end
+
   def create
     if current_user.admin?
       @vpn = Vpn.new(vpn_params)

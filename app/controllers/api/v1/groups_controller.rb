@@ -1,4 +1,9 @@
 class ::Api::V1::GroupsController < ::Api::V1::BaseController
+  def index
+    groups = Group.order(:id).page(params[:page]).per(params[:per_page])
+    render json: groups, status: :ok
+  end
+
   def create
     if current_user.admin?
       @group = Group.new(group_params)
@@ -51,6 +56,20 @@ class ::Api::V1::GroupsController < ::Api::V1::BaseController
     
     @group.remove_user(params[:user_id])
     head :no_content
+  end
+
+  def list_admins
+    group = Group.find(params[:id])
+    users = group.group_admins.joins(:user).
+      select('users.id, users.email, users.name, users.active, group_admins.created_at as join_date').
+      where('users.active = ?', true)
+    render json: users, status: :ok
+  end
+
+  def associated_vpns
+    group = Group.find(params[:id])
+    vpns = group.vpns
+    render json: vpns, status: :ok
   end
 
   private

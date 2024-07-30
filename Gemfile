@@ -31,6 +31,7 @@ gem 'slim-rails'
 gem 'turbolinks'
 gem 'uglifier'
 gem 'whenever', require: false
+gem 'kaminari'
 
 group :development, :test do
   gem 'capybara'
