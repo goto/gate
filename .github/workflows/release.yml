@@ -4,7 +4,7 @@ name: Docker Image CI
 #   push:
 #     tags:
 #       - '*'
-on: [pull_request]
+on: [push]
 
 jobs:
   release:
