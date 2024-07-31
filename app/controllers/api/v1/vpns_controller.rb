@@ -12,6 +12,7 @@ class ::Api::V1::VpnsController < ::Api::V1::BaseController
     return head :not_found unless vpn.present?
 
     groups = vpn.groups
+    groups = groups.where("name LIKE ?", "%#{params[:q]}%") if params[:q].present?
     render json: groups, status: :ok
   end
 
