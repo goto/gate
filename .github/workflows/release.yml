@@ -17,7 +17,7 @@ jobs:
           ruby-version: '2.4.4'
       - name: Build the Docker image
         run: |
-          bundle install
+          bundle install --without development
           bundle exec rake assets:precompile RAILS_ENV=production
           docker build . --file Dockerfile --tag gotocompany/gate:${{ github.ref_name }}
       - name: Login to DockerHub
