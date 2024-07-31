@@ -11,9 +11,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@ec02537da5712d66d4d50a0f33b7eb52773b5ed1
+        with:
+          ruby-version: "3.1.2"
       - name: Build the Docker image
         run: |
-          gem install bundler
           bundle install
           bundle exec rake assets:precompile RAILS_ENV=production
           docker build . --file Dockerfile --tag gotocompany/gate:${{ github.ref_name }}
