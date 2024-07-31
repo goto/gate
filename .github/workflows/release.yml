@@ -16,6 +16,8 @@ jobs:
         with:
           ruby-version: '2.4.4'
       - name: Build the Docker image
+        env:
+          GATE_HOSTED_DOMAINS: ${{ secrets.GATE_HOSTED_DOMAINS }}
         run: |
           bundle install --without development
           bundle exec rake assets:precompile RAILS_ENV=production
