@@ -59,7 +59,9 @@ class ::Api::V1::GroupsController < ::Api::V1::BaseController
   end
 
   def list_admins
-    group = Group.find(params[:id])
+    group = Group.find_by_id(params[:id])
+    return head :not_found unless group.present?
+
     users = group.group_admins.joins(:user).
       select('users.id, users.email, users.name, users.active, group_admins.created_at as join_date').
       where('users.active = ?', true)
@@ -67,7 +69,9 @@ class ::Api::V1::GroupsController < ::Api::V1::BaseController
   end
 
   def associated_vpns
-    group = Group.find(params[:id])
+    group = Group.find_by_id(params[:id])
+    return head :not_found unless group.present?
+
     vpns = group.vpns
     render json: vpns, status: :ok
   end
