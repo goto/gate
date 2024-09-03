@@ -68,7 +68,12 @@
       br
       = "*This group does not have any group members" if @group_users.length == 0
       br
-      - if current_user.admin or @group.admin?(current_user)
+      - if ENV['GATE_GUARDIAN_URL'].present?
+        p
+          | Raise access request in 
+          a href="#{ENV['GATE_GUARDIAN_URL']}" target="_blank" Guardian
+          |  to join this group
+      - if current_user.admin
         .h7 Assign members
         = form_tag  add_user_to_group_path(@group.id), method: :post do
           .row
