@@ -73,7 +73,7 @@
           | Raise access request in 
           a href="#{ENV['GATE_GUARDIAN_URL']}" target="_blank" Guardian
           |  to join this group
-      - if current_user.admin
+      - if current_user.admin or (@group.admin?(current_user) and ENV['GATE_GROUP_ALLOWED_MANAGE_GROUP_MEMBERSHIP'] && ENV['GATE_GROUP_ALLOWED_MANAGE_GROUP_MEMBERSHIP'].split(',').include?(@group.id.to_s))
         .h7 Assign members
         = form_tag  add_user_to_group_path(@group.id), method: :post do
           .row
